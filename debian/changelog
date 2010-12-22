@@ -1,0 +1,26 @@
+repmgr (1.0.0-4~git7b0a1420ubuntu3) lucid; urgency=low
+
+  * Change the series to lucid. Argh!
+
+ -- Dan Farina <drfarina@acm.org>  Wed, 22 Dec 2010 13:33:11 -0800
+
+repmgr (1.0.0-3~git7b0a1420ubuntu2) lucid; urgency=low
+
+  * Add a slew of dev package dependencies taken from the PostgreSQL
+    control file directly.
+
+ -- Dan Farina <drfarina@acm.org>  Wed, 22 Dec 2010 11:28:38 -0800
+
+repmgr (1.0.0-2~git7b0a1420ubuntu1) lucid; urgency=low
+
+  * Add dependency on libxslt1-dev binaries to build.  A better
+    solution would be to depend on the build-depends on postgresql
+    itself.
+
+ -- Dan Farina <drfarina@acm.org>  Wed, 22 Dec 2010 11:07:31 -0800
+
+repmgr (1.0.0-1~git7b0a1420) lucid; urgency=low
+
+  * Initial Debian version.
+
+ -- Dan Farina <drfarina@acm.org>  Tue, 21 Dec 2010 17:50:13 -0800
