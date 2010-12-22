@@ -1,0 +1,43 @@
+Source: repmgr
+Section: database
+Priority: extra
+Maintainer: Daniel Farina <daniel@heroku.com>
+Build-Depends: git-buildpackage (>= 0.4.57), yada (>= 0.55),
+ postgresql-server-dev-9.0, libperl-dev, tcl8.5-dev, libedit-dev,
+ libssl-dev, zlib1g-dev | libz-dev, libpam0g-dev | libpam-dev,
+ libxml2-dev, libkrb5-dev, libldap2-dev, libxslt1-dev,
+ libossp-uuid-dev, python-dev
+Standards-Version: 3.9.1
+Upstream-Source: https://github.com/fdr/repmgr/tarball/7b0a142075df9e4b1eb8eb054341b4fc6b2a5c43
+Homepage: http://projects.2ndquadrant.com/repmgr
+Description: PostgreSQL 9.0 Replication Manager
+Copyright: GPL-3
+ Copyright 2010-2011 2ndQuadrent
+Major-Changes:
+ Introduced many bugs by not editing debian/packages appropriately.
+Build: sh
+ export PGXS90=$(/usr/lib/postgresql/9.0/bin/pg_config --pgxs)
+ make all USE_PGXS=1 PGXS="${PGXS90}"
+Clean: sh
+ export PGXS90=$(/usr/lib/postgresql/9.0/bin/pg_config --pgxs)
+ make clean USE_PGXS=1 PGXS="${PGXS84}"
+
+Package: postgresql-9.0-repmgr
+Architecture: any
+Depends: [/usr/lib/postgresql/9.0/bin/*], postgresql-9.0
+Description: PostgreSQL 9.0 Replication Manager
+ PostgreSQL 9.0 allow us to have replicated Hot Standby servers which
+ we can query and/or use for high availability.  While the main
+ components of the feature are included with PostgreSQL, the user is
+ expected to manage the high availability part of it.  repmgr allows
+ you to monitor and manage your replicated PostgreSQL databases as a
+ single cluster.
+Install: sh
+ yada install -bin -into /usr/lib/postgresql/9.0/bin repmgrd
+ yada install -bin -into /usr/lib/postgresql/9.0/bin repmgr
+ .
+ yada symlink -bin -as repmgr ../share/postgresql-common/pg_wrapper
+ yada symlink -bin -as repmgrd ../share/postgresql-common/pg_wrapper
+ .
+ yada install -data -into /usr/share/postgresql/9.0/contrib repmgr.sql
+ yada install -data -into /usr/share/postgresql/9.0/contrib uninstall_repmgr.sql
