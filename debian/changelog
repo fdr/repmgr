@@ -1,3 +1,9 @@
+repmgr (1.0.0-6~gitfaddaed3ubuntu6) lucid; urgency=low
+
+  * Fix more stringy issues
+
+ -- Dan Farina <drfarina@acm.org>  Wed, 22 Dec 2010 20:35:48 -0800
+
 repmgr (1.0.0-5~gitfaddaed3ubuntu5) lucid; urgency=low
 
   * Incorporate new upstream fix(es)
