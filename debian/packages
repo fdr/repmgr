@@ -43,5 +43,5 @@ Install: sh
  yada symlink -bin -as repmgr ../share/postgresql-common/pg_wrapper
  yada symlink -bin -as repmgrd ../share/postgresql-common/pg_wrapper
  .
- yada install -data -into usr/share/postgresql/9.0/contrib repmgr.sql
- yada install -data -into usr/share/postgresql/9.0/contrib uninstall_repmgr.sql
+ yada install -data -into /usr/share/postgresql/9.0/contrib repmgr.sql
+ yada install -data -into /usr/share/postgresql/9.0/contrib uninstall_repmgr.sql
