@@ -1,3 +1,9 @@
+repmgr (1.0.0-10~git156714f3ubuntu15) lucid; urgency=low
+
+  * Fix my rebase
+
+ -- Dan Farina <drfarina@acm.org>  Mon, 07 Feb 2011 03:10:04 -0800
+
 repmgr (1.0.0-10~git156714f3ubuntu14) lucid; urgency=low
 
   * Arrrgh series
