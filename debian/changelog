@@ -1,3 +1,9 @@
+repmgr (1.0.0-10~git156714f3ubuntu11) lucid; urgency=low
+
+  * Free memory fixing
+
+ -- Dan Farina <drfarina@acm.org>  Mon, 07 Feb 2011 01:48:56 -0800
+
 repmgr (1.0.0-10~git156714f3ubuntu10) lucid; urgency=low
 
   * Series to lucid. Again.
