@@ -1,3 +1,9 @@
+repmgr (1.0.0-10~git156714f3ubuntu12) lucid; urgency=low
+
+  * Quoting fixes
+
+ -- Dan Farina <drfarina@acm.org>  Mon, 07 Feb 2011 02:29:00 -0800
+
 repmgr (1.0.0-10~git156714f3ubuntu11) lucid; urgency=low
 
   * Free memory fixing
