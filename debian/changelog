@@ -1,3 +1,9 @@
+repmgr (1.0.0-10~git156714f3ubuntu14) lucid; urgency=low
+
+  * Arrrgh series
+
+ -- Dan Farina <drfarina@acm.org>  Mon, 07 Feb 2011 02:54:17 -0800
+
 repmgr (1.0.0-10~git156714f3ubuntu13) maverick; urgency=low
 
   * Oops.  Too much quoting.
