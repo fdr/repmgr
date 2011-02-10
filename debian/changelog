@@ -1,3 +1,9 @@
+repmgr (1.0.0-10~git156714f3ubuntu18) lucid; urgency=low
+
+  * More helpfulness in checking configuration file situation
+
+ -- Dan Farina <drfarina@acm.org>  Thu, 10 Feb 2011 03:19:48 -0800
+
 repmgr (1.0.0-10~git156714f3ubuntu17) lucid; urgency=low
 
   * Avoid checking configuration file in an unnecessary case
