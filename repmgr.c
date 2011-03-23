@@ -47,7 +47,7 @@
 #define STANDBY_FOLLOW 	 5
 
 static void help(const char *progname);
-static bool create_recovery_file(const char *data_dir, char *master_conninfo);
+static bool create_recovery_file(const char *data_dir);
 static int	copy_remote_files(char *host, char *remote_user, char *remote_path,
                              char *local_path, bool is_directory);
 static bool check_parameters_for_action(const int action);
@@ -67,11 +67,8 @@ static const char *values[6];
 char repmgr_schema[MAXLEN];
 bool need_a_node = true;
 
-/* XXX This should be mapped into a command line option */
-bool require_password = false;
-
 /* Initialization of runtime options */
-t_runtime_options runtime_options = { "", "", "", "", "", "", DEFAULT_WAL_KEEP_SEGMENTS, false, false, "" };
+t_runtime_options runtime_options = { "", "", "", "", "", "", DEFAULT_WAL_KEEP_SEGMENTS, false, false, false, "" };
 t_configuration_options options = { "", -1, "", "", "" };
 
 static char		*server_mode = NULL;
@@ -92,6 +89,7 @@ main(int argc, char **argv)
 		{"wal-keep-segments", required_argument, NULL, 'w'},
 		{"force", no_argument, NULL, 'F'},
 		{"verbose", no_argument, NULL, 'v'},
+		{"password-require", no_argument, NULL, 1},
 		{NULL, 0, NULL, 0}
 	};
 
@@ -152,6 +150,10 @@ main(int argc, char **argv)
 				break;
 			case 'v':
 				runtime_options.verbose = true;
+				break;
+			case 1:
+				/* For password-require */
+				runtime_options.password_required = true;
 				break;
 			default:
 				usage();
@@ -1070,7 +1072,7 @@ stop_backup:
 	}
 
 	/* Finally, write the recovery.conf file */
-	create_recovery_file(runtime_options.dest_dir, NULL);
+	create_recovery_file(runtime_options.dest_dir);
 
 	/*
 	 * We don't start the service yet because we still may want to
@@ -1291,7 +1293,7 @@ do_standby_follow(void)
 	PQfinish(conn);
 
 	/* write the recovery.conf file */
-	if (!create_recovery_file(data_dir,NULL))
+	if (!create_recovery_file(data_dir))
 		exit(ERR_BAD_CONFIG);
 
 	/* Finally, restart the service */
@@ -1337,6 +1339,7 @@ void help(const char *progname)
 	printf(_("	-R, --remote-user=USERNAME database server username for rsync\n"));
 	printf(_("	-w, --wal-keep-segments=VALUE  minimum value for the GUC wal_keep_segments (default: 5000)\n"));
 	printf(_("	-F, --force				   force potentially dangerous operations to happen\n"));
+	printf(_("	--password-required		   read the PGPASSWORD environment variable and add it to connection information\n"));
 
 	printf(_("\n%s performs some tasks like clone a node, promote it "), progname);
 	printf(_("or making follow another node and then exits.\n"));
@@ -1356,11 +1359,12 @@ void help(const char *progname)
  * Writes master_conninfo to recovery.conf if is non-NULL
  */
 static bool
-create_recovery_file(const char *data_dir, char *master_conninfo)
+create_recovery_file(const char *data_dir)
 {
 	FILE		*recovery_file;
-	char		recovery_file_path[MAXLEN];
-	char		line[MAXLEN];
+	char		 recovery_file_path[MAXLEN];
+	char		 line[MAXLEN];
+	char		*port = NULL;
 
 	maxlen_snprintf(recovery_file_path, "%s/%s", data_dir, RECOVERY_FILE);
 
@@ -1379,41 +1383,28 @@ create_recovery_file(const char *data_dir, char *master_conninfo)
 		return false;
 	}
 
-	maxlen_snprintf(line, "primary_conninfo = 'host=%s port=%s'\n", runtime_options.host, 
-																	(runtime_options.masterport[0]) ? runtime_options.masterport : "5432");
+	if (strlen(runtime_options.masterport) == 0)
+		/* Use a default PostgreSQL port if one was not specified */
+		port = "5432";
+	else
+		port = runtime_options.masterport;
 
 	/*
-	 * Template a password into the connection string in recovery.conf
-	 * if a full connection string is not already provided.
-	 *
-	 * Sometimes this is passed by the user explicitly, and otherwise
-	 * we try to get it into the environment.
-	 *
-	 * XXX: This is pretty dirty, at least push this up to the caller rather
-	 * than hitting environment variables at this level.
+	 * Template the primary_conninfo component of recovery.conf, depending on
+	 * whether a password needs to be included.
 	 */
-	if (master_conninfo == NULL)
+	if (runtime_options.password_required)
 	{
 		char *password = getenv("PGPASSWORD");
 
-		if (password != NULL)
-		{
-			maxlen_snprintf(line,
-			                "primary_conninfo = 'host=%s port=%s password=%s'\n",
-			                runtime_options.host, 
-							(runtime_options.masterport[0]) ? runtime_options.masterport : "5432",
-			                password);
-		}
-		else
-		{
-			if (require_password)
-			{
-				log_err(_("%s: PGPASSWORD not set, but having one is required\n"),
-				        progname);
-				exit(ERR_BAD_PASSWORD);
-			}
-		}
+		maxlen_snprintf(line,
+						"primary_conninfo = 'host=%s port=%s password=%s'\n",
+						runtime_options.host,  port, password);
 	}
+	else
+		maxlen_snprintf(line, "primary_conninfo = 'host=%s port=%s'\n",
+						runtime_options.host, port);
+
 
 	if (fputs(line, recovery_file) == EOF)
 	{

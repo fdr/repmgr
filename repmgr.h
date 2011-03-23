@@ -55,6 +55,7 @@ typedef struct
 	char wal_keep_segments[MAXLEN];
 	bool verbose;
 	bool force;
+	bool password_required;
 
 	char masterport[MAXLEN];
 
