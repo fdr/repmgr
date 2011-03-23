@@ -121,41 +121,41 @@ main(int argc, char **argv)
 	{
 		switch (c)
 		{
-		case 'd':
-			strncpy(runtime_options.dbname, optarg, MAXLEN);
-			break;
-		case 'h':
-			strncpy(runtime_options.host, optarg, MAXLEN);
-			break;
-		case 'p':
-			if (atoi(optarg) > 0)
-				strncpy(runtime_options.masterport, optarg, MAXLEN);
-			break;
-		case 'U':
-			strncpy(runtime_options.username, optarg, MAXLEN);
-			break;
-		case 'D':
-			strncpy(runtime_options.dest_dir, optarg, MAXFILENAME);
-			break;
-		case 'f':
-			strncpy(runtime_options.config_file, optarg, MAXLEN);
-			break;
-		case 'R':
-			strncpy(runtime_options.remote_user, optarg, MAXLEN);
-			break;
-		case 'w':
-			if (atoi(optarg) > 0)
-				strncpy(runtime_options.wal_keep_segments, optarg, MAXLEN);
-			break;
-		case 'F':
-			runtime_options.force = true;
-			break;
-		case 'v':
-			runtime_options.verbose = true;
-			break;
-		default:
-			usage();
-			exit(ERR_BAD_CONFIG);
+			case 'd':
+				strncpy(runtime_options.dbname, optarg, MAXLEN);
+				break;
+			case 'h':
+				strncpy(runtime_options.host, optarg, MAXLEN);
+				break;
+			case 'p':
+				if (atoi(optarg) > 0)
+					strncpy(runtime_options.masterport, optarg, MAXLEN);
+				break;
+			case 'U':
+				strncpy(runtime_options.username, optarg, MAXLEN);
+				break;
+			case 'D':
+				strncpy(runtime_options.dest_dir, optarg, MAXFILENAME);
+				break;
+			case 'f':
+				strncpy(runtime_options.config_file, optarg, MAXLEN);
+				break;
+			case 'R':
+				strncpy(runtime_options.remote_user, optarg, MAXLEN);
+				break;
+			case 'w':
+				if (atoi(optarg) > 0)
+					strncpy(runtime_options.wal_keep_segments, optarg, MAXLEN);
+				break;
+			case 'F':
+				runtime_options.force = true;
+				break;
+			case 'v':
+				runtime_options.verbose = true;
+				break;
+			default:
+				usage();
+				exit(ERR_BAD_CONFIG);
 		}
 	}
 
